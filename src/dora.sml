@@ -63,8 +63,30 @@ fun parseDate (s : string) : int option =
 
 val eea = ["AT","BE","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IE","IT","LV","LT","LU","MT","NL","PL","PT","RO","SK","SI","ES","SE","IS","LI","NO","EU","EEA"]
 
+(* ISO 17442: 20 characters whose letters become 10..35; the whole number must leave remainder 1 modulo 97 (ISO 7064 mod 97-10). *)
+fun leiChecksumOk (s : string) : bool =
+  let
+    fun step (c, r) =
+      if Char.isDigit c then (r * 10 + (Char.ord c - Char.ord #"0")) mod 97
+      else (r * 100 + (Char.ord c - Char.ord #"A" + 10)) mod 97
+  in
+    CharVector.foldl step 0 s = 1
+  end
+
 fun validLei (s : string) : bool =
   size s = 20 andalso CharVector.all (fn c => Char.isDigit c orelse (Char.isAlpha c andalso Char.isUpper c)) s
+  andalso leiChecksumOk s
+
+(* The ITS also allows an EUID for providers without an LEI: country code, registry part, a dot, national number. *)
+fun validEuid (s : string) : bool =
+  size s >= 6 andalso size s <= 40
+  andalso Char.isAlpha (String.sub (s, 0)) andalso Char.isUpper (String.sub (s, 0))
+  andalso Char.isAlpha (String.sub (s, 1)) andalso Char.isUpper (String.sub (s, 1))
+  andalso CharVector.all (fn c => Char.isDigit c orelse (Char.isAlpha c andalso Char.isUpper c) orelse c = #"." orelse c = #"-") s
+  andalso length (String.fields (fn c => c = #".") s) = 2
+  andalso List.all (fn p => size p > 0) (String.fields (fn c => c = #".") s)
+
+fun validProviderId (s : string) : bool = validLei s orelse validEuid s
 
 fun indexOf (names : string list) (n : string) : int option =
   let fun go [] _ = NONE
@@ -110,8 +132,8 @@ fun audit (text : string, label : string, today : int) : finding list =
                   if cif andalso lower (col f "audit_right") <> "yes" then
                     add "high" "DOR002" (who ^ " supports a critical or important function without audit and access rights")
                   else ();
-                  if not (validLei (col f "lei")) then
-                    add "medium" "DOR003" (who ^ " has a missing or invalid LEI")
+                  if not (validProviderId (col f "lei")) then
+                    add "medium" "DOR003" (who ^ " has a missing or invalid LEI (20 characters with valid ISO 17442 check digits) or EUID")
                   else ();
                   if cif andalso not (List.exists (fn c => c = String.map Char.toUpper (col f "data_location")) eea) then
                     add "medium" "DOR004" (who ^ " keeps data in '" ^ col f "data_location" ^ "', which is not an EEA location")
