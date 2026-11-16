@@ -1,0 +1,7 @@
+provider,lei,function,criticality,subcontractors,exit_plan,audit_right,data_location,contract_end
+Nimbus Cloud SA,5493001KJTIIGC8Y1R12,core banking hosting,critical,"DataCenter Iberia, NetCarrier",yes,yes,ES,2028-06-30
+PayLink Ltd,,payment processing,critical,,no,no,US,2026-12-15
+SecureDocs GmbH,529900T8BM49AURSDO55,document archive,important,none,yes,no,DE,2026-10-31
+Mailer Pro,12345,customer emails,standard,,,,US,2027-03-01
+CardHub NV,724500VKKSYLPO8P3N52,card scheme gateway,critical,"EdgeNet",yes,yes,eea,2027-01-20
+Unclassified Tools,5493006MHB84DD0ZWV15,internal wiki,,none,yes,yes,FR,2029-01-01

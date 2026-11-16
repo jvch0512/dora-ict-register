@@ -1,0 +1,12 @@
+# 2 files, 11 findings
+high	DOR001	register.csv:3	PayLink Ltd supports a critical or important function and has no documented exit plan
+high	DOR002	register.csv:3	PayLink Ltd supports a critical or important function without audit and access rights
+high	DOR002	register.csv:4	SecureDocs GmbH supports a critical or important function without audit and access rights
+medium	DOR003	register.csv:3	PayLink Ltd has a missing or invalid LEI
+medium	DOR004	register.csv:3	PayLink Ltd keeps data in 'US', which is not an EEA location
+medium	DOR005	register.csv:3	PayLink Ltd has no declared subcontractors (write none if there are none)
+medium	DOR006	register.csv:4	SecureDocs GmbH contract ended on 2026-10-31
+medium	DOR003	register.csv:5	Mailer Pro has a missing or invalid LEI
+low	DOR006	register.csv:3	PayLink Ltd contract ends on 2026-12-15, within 90 days
+low	DOR006	register.csv:6	CardHub NV contract ends on 2027-01-20, within 90 days
+low	DOR007	register.csv:7	Unclassified Tools has no valid criticality (use critical, important or standard)
